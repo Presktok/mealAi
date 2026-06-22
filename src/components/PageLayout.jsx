@@ -7,7 +7,7 @@ function PageLayout({ children, variant = 'default' }) {
   const className = variant === 'content' ? contentClass : ''
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-800">
+    <div className="flex min-h-screen flex-col bg-gray-50 font-sans text-gray-800 dark:bg-gray-900 dark:text-gray-100">
       <Navbar />
       <main className={`flex-1 ${className}`.trim()}>{children}</main>
       <Footer />
