@@ -1,5 +1,16 @@
+import PageLayout from '../components/PageLayout'
+
 function Login() {
-  return <h1>Login</h1>
+  return (
+    <PageLayout variant="content">
+      <h1 className="mb-4 text-3xl font-bold">Sign In</h1>
+      <p className="leading-relaxed text-gray-700">
+        A login form will go here so you can store saved meals and get
+        suggestions that improve over time. This page is a placeholder while
+        that feature is still being built.
+      </p>
+    </PageLayout>
+  )
 }
 
 export default Login
