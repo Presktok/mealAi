@@ -1,0 +1,99 @@
+{
+  "info": {
+    "name": "MoodMeal API",
+    "description": "Sample requests for the MoodMeal Express backend (Week 4).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/health"
+      }
+    },
+    {
+      "name": "Get All Meals",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/meals"
+      }
+    },
+    {
+      "name": "Get Meal by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/meals/1"
+      }
+    },
+    {
+      "name": "Search Meals",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/meals/search?q=biryani",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "meals", "search"],
+          "query": [
+            {
+              "key": "q",
+              "value": "biryani"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Meal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Mango Lassi Smoothie\",\n  \"rating\": 4.5,\n  \"discount\": \"10%\"\n}"
+        },
+        "url": "{{baseUrl}}/api/meals"
+      }
+    },
+    {
+      "name": "Update Meal",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Hyderabadi Chicken Biryani (Spicy)\",\n  \"rating\": 4.9,\n  \"discount\": \"30%\"\n}"
+        },
+        "url": "{{baseUrl}}/api/meals/1"
+      }
+    },
+    {
+      "name": "Delete Meal",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/api/meals/3"
+      }
+    }
+  ]
+}
