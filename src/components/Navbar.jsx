@@ -29,6 +29,9 @@ function Navbar() {
           <Link to="/login" className="hover:text-yellow-300">
             Sign In
           </Link>
+          <Link to="/signup" className="hover:text-yellow-300">
+            Sign Up
+          </Link>
         </li>
         <li>
           <button
