@@ -1,9 +1,11 @@
 import { AppError } from '../middleware/errorHandler.js'
-import { getAllMeals, saveMeals, getNextId } from '../utils/mealStore.js'
+import Meal from '../models/Meal.js'
+
+const VALID_MOODS = ['spicy', 'sweet', 'comfort', 'healthy', 'quick', 'trending']
 
 /** Validate meal fields for create/update operations. */
 function validateMealBody(body) {
-  const { title, rating, discount } = body
+  const { title, rating, discount, mood, image, distance } = body
 
   if (!title || typeof title !== 'string' || !title.trim()) {
     throw new AppError('title is required and must be a non-empty string', 400)
@@ -17,103 +19,105 @@ function validateMealBody(body) {
     throw new AppError('discount is required and must be a non-empty string', 400)
   }
 
-  return {
+  if (!mood || typeof mood !== 'string' || !VALID_MOODS.includes(mood.toLowerCase())) {
+    throw new AppError(
+      `mood is required and must be one of: ${VALID_MOODS.join(', ')}`,
+      400
+    )
+  }
+
+  if (image !== undefined && typeof image !== 'string') {
+    throw new AppError('image must be a string', 400)
+  }
+
+  if (distance !== undefined && (typeof distance !== 'number' || distance < 0)) {
+    throw new AppError('distance must be a number >= 0', 400)
+  }
+
+  const validated = {
     title: title.trim(),
     rating,
     discount: discount.trim(),
+    mood: mood.toLowerCase(),
   }
+
+  if (image !== undefined) validated.image = image
+  if (distance !== undefined) validated.distance = distance
+
+  return validated
 }
 
 /** GET /api/meals */
-export function listMeals(req, res) {
-  const meals = getAllMeals()
+export const listMeals = async (req, res) => {
+  const filter = {}
+  if (req.query.mood) {
+    filter.mood = req.query.mood.toLowerCase()
+  }
+  if (req.query.category) {
+    filter.category = req.query.category.toLowerCase()
+  }
+
+  const meals = await Meal.find(filter).sort({ distance: 1 })
   res.status(200).json({ success: true, count: meals.length, data: meals })
 }
 
 /** GET /api/meals/search?q= */
-export function searchMeals(req, res) {
-  const query = (req.query.q || '').trim().toLowerCase()
+export async function searchMeals(req, res) {
+  const query = (req.query.q || '').trim()
 
   if (!query) {
     throw new AppError('Search query parameter "q" is required', 400)
   }
 
-  const meals = getAllMeals().filter((meal) =>
-    meal.title.toLowerCase().includes(query)
-  )
+  // Case-insensitive regex search on the title field
+  const meals = await Meal.find({ title: { $regex: query, $options: 'i' } })
 
   res.status(200).json({ success: true, count: meals.length, query, data: meals })
 }
 
 /** GET /api/meals/:id */
-export function getMealById(req, res) {
-  const id = Number(req.params.id)
-
-  if (Number.isNaN(id)) {
-    throw new AppError('Invalid meal id', 400)
-  }
-
-  const meal = getAllMeals().find((item) => item.id === id)
+export async function getMealById(req, res) {
+  const meal = await Meal.findById(req.params.id)
 
   if (!meal) {
-    throw new AppError(`Meal with id ${id} not found`, 404)
+    throw new AppError(`Meal with id ${req.params.id} not found`, 404)
   }
 
   res.status(200).json({ success: true, data: meal })
 }
 
 /** POST /api/meals */
-export function createMeal(req, res) {
+export async function createMeal(req, res) {
   const validated = validateMealBody(req.body)
-  const meals = getAllMeals()
-  const newMeal = { id: getNextId(meals), ...validated }
-
-  meals.push(newMeal)
-  saveMeals(meals)
+  const newMeal = await Meal.create(validated)
 
   res.status(201).json({ success: true, data: newMeal })
 }
 
 /** PUT /api/meals/:id */
-export function updateMeal(req, res) {
-  const id = Number(req.params.id)
-
-  if (Number.isNaN(id)) {
-    throw new AppError('Invalid meal id', 400)
-  }
-
+export async function updateMeal(req, res) {
   const validated = validateMealBody(req.body)
-  const meals = getAllMeals()
-  const index = meals.findIndex((item) => item.id === id)
 
-  if (index === -1) {
-    throw new AppError(`Meal with id ${id} not found`, 404)
+  const updatedMeal = await Meal.findByIdAndUpdate(
+    req.params.id,
+    validated,
+    { new: true, runValidators: true }
+  )
+
+  if (!updatedMeal) {
+    throw new AppError(`Meal with id ${req.params.id} not found`, 404)
   }
-
-  const updatedMeal = { id, ...validated }
-  meals[index] = updatedMeal
-  saveMeals(meals)
 
   res.status(200).json({ success: true, data: updatedMeal })
 }
 
 /** DELETE /api/meals/:id */
-export function deleteMeal(req, res) {
-  const id = Number(req.params.id)
+export async function deleteMeal(req, res) {
+  const removed = await Meal.findByIdAndDelete(req.params.id)
 
-  if (Number.isNaN(id)) {
-    throw new AppError('Invalid meal id', 400)
+  if (!removed) {
+    throw new AppError(`Meal with id ${req.params.id} not found`, 404)
   }
-
-  const meals = getAllMeals()
-  const index = meals.findIndex((item) => item.id === id)
-
-  if (index === -1) {
-    throw new AppError(`Meal with id ${id} not found`, 404)
-  }
-
-  const [removed] = meals.splice(index, 1)
-  saveMeals(meals)
 
   res.status(200).json({ success: true, data: removed })
 }

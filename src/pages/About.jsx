@@ -14,8 +14,10 @@ function About() {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [fade, setFade] = useState(true);
   const videoRef = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
     window.scrollTo(0, 0);
   }, []);
 
@@ -71,7 +73,7 @@ function About() {
             Experience smart, mood‑based meal recommendations — in&nbsp;seconds.
           </p>
           <Link
-            to="/dashboard"
+            to={isLoggedIn ? "/dashboard" : "/login"}
             className="mt-4 rounded-full bg-red-500 px-8 py-3 text-lg font-semibold shadow-xl transition-transform hover:scale-105 hover:bg-red-600"
           >
             Get Started
@@ -193,10 +195,10 @@ function About() {
           Join thousands of happy users who let their mood guide their meal.
         </p>
         <Link
-          to="/signup"
+          to={isLoggedIn ? "/dashboard" : "/signup"}
           className="rounded-full bg-red-500 px-10 py-3 text-lg font-semibold text-white shadow-xl transition-transform hover:scale-105 hover:bg-red-600"
         >
-          Sign Up Free
+          {isLoggedIn ? 'Go to Dashboard' : 'Sign Up Free'}
         </Link>
       </section>
 

@@ -1,0 +1,46 @@
+erDiagram
+    USER {
+        ObjectId _id
+        String name
+        String email
+        String password
+        String phone
+        Date createdAt
+        Date updatedAt
+    }
+
+    MEAL {
+        ObjectId _id
+        String title
+        Number rating
+        String discount
+        String mood
+        String category
+        Number price
+        String image
+        Number distance
+        Date createdAt
+        Date updatedAt
+    }
+
+    ORDER {
+        ObjectId _id
+        ObjectId user FK
+        Number totalPrice
+        String status
+        String deliveryAddress
+        Date createdAt
+        Date updatedAt
+    }
+
+    ORDER_ITEM {
+        String title
+        Number qty
+        Number price
+        String image
+        ObjectId meal FK
+    }
+
+    USER ||--o{ ORDER : "places"
+    ORDER ||--|{ ORDER_ITEM : "contains"
+    ORDER_ITEM }o--|| MEAL : "references"

@@ -20,10 +20,25 @@ export function asyncHandler(fn) {
 
 /**
  * Centralized error handler — must be registered after all routes.
+ * Handles Mongoose-specific errors (CastError, ValidationError) alongside
+ * application-level AppError instances.
  */
 export function errorHandler(err, req, res, next) {
-  const statusCode = err.statusCode || 500
-  const message = err.message || 'Internal Server Error'
+  let statusCode = err.statusCode || 500
+  let message = err.message || 'Internal Server Error'
+
+  // Mongoose: invalid ObjectId format (e.g. "abc" passed as :id)
+  if (err.name === 'CastError') {
+    statusCode = 400
+    message = `Invalid ${err.path}: ${err.value}`
+  }
+
+  // Mongoose: schema validation failure
+  if (err.name === 'ValidationError') {
+    statusCode = 400
+    const messages = Object.values(err.errors).map((e) => e.message)
+    message = messages.join(', ')
+  }
 
   if (process.env.NODE_ENV !== 'production') {
     console.error(`[${req.method}] ${req.originalUrl} —`, err)

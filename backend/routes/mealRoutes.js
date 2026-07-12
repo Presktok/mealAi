@@ -11,12 +11,14 @@ import {
 
 const router = Router()
 
+import { protect } from '../middleware/authMiddleware.js'
+
 // Search must be registered before /:id to avoid treating "search" as an id
 router.get('/search', asyncHandler(searchMeals))
 router.get('/', asyncHandler(listMeals))
 router.get('/:id', asyncHandler(getMealById))
-router.post('/', asyncHandler(createMeal))
-router.put('/:id', asyncHandler(updateMeal))
-router.delete('/:id', asyncHandler(deleteMeal))
+router.post('/', protect, asyncHandler(createMeal))
+router.put('/:id', protect, asyncHandler(updateMeal))
+router.delete('/:id', protect, asyncHandler(deleteMeal))
 
 export default router
