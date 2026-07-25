@@ -4,6 +4,7 @@ import PageLayout from '../components/PageLayout'
 
 function Profile() {
   const [activeTab, setActiveTab] = useState('orders')
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const navigate = useNavigate()
 
   const [user, setUser] = useState(null)
@@ -93,9 +94,30 @@ function Profile() {
   const tabs = [
     { id: 'orders', label: '📦 My Orders' },
     { id: 'details', label: '👤 Account Details' },
-    { id: 'addresses', label: '📍 Saved Addresses' },
     { id: 'settings', label: '⚙️ Settings' }
   ]
+
+  const handleDeleteAccount = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (data.success) {
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('token')
+        window.dispatchEvent(new Event('auth-change'))
+        navigate('/')
+      } else {
+        alert(data.error || 'Failed to delete account')
+      }
+    } catch (err) {
+      console.error(err)
+      alert('Server error deleting account')
+    }
+  }
 
   return (
     <PageLayout hideSearch={true}>
@@ -254,27 +276,7 @@ function Profile() {
               </div>
             )}
 
-            {/* ADDRESSES TAB */}
-            {activeTab === 'addresses' && (
-              <div>
-                <div className="mb-6 flex items-center justify-between">
-                  <h2 className="text-2xl font-bold dark:text-white">Saved Addresses</h2>
-                  <button className="text-primary hover:underline font-medium">+ Add New</button>
-                </div>
-                <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 dark:bg-primary/10">
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="rounded bg-primary px-2 py-0.5 text-xs font-bold text-white">HOME</span>
-                  </div>
-                  <p className="font-medium dark:text-white">{user.name}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Flat 402, Skyline Apartments, Rajpur Road</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Dehradun, Uttarakhand 248001</p>
-                  <div className="mt-4 flex gap-4">
-                    <button className="text-sm font-medium text-primary hover:underline">Edit</button>
-                    <button className="text-sm font-medium text-red-500 hover:underline">Delete</button>
-                  </div>
-                </div>
-              </div>
-            )}
+            {/* ADDRESSES TAB REMOVED FOR NOW */}
 
             {/* SETTINGS TAB */}
             {activeTab === 'settings' && (
@@ -297,7 +299,10 @@ function Profile() {
                   </div>
                   <div>
                     <h4 className="mb-2 font-bold text-red-500">Danger Zone</h4>
-                    <button className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:hover:bg-red-900/40">
+                    <button 
+                      onClick={() => setShowDeleteConfirm(true)}
+                      className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:hover:bg-red-900/40"
+                    >
                       Delete Account
                     </button>
                   </div>
@@ -308,6 +313,37 @@ function Profile() {
           </div>
         </main>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+            <div className="flex justify-center mb-4">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600 dark:bg-red-900/30">
+                ⚠️
+              </span>
+            </div>
+            <h3 className="mb-2 text-center text-xl font-bold dark:text-white">Delete Account?</h3>
+            <p className="mb-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              This action cannot be undone. All your orders and preferences will be permanently lost.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowDeleteConfirm(false)}
+                className="flex-1 rounded-xl bg-gray-100 py-3 font-bold text-gray-700 hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleDeleteAccount}
+                className="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white hover:bg-red-600 transition-colors shadow-sm shadow-red-500/30"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PageLayout>
   )
 }

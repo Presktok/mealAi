@@ -1,5 +1,5 @@
 import express from 'express'
-import { registerUser, loginUser, getMe, updateUser, googleCallback } from '../controllers/authController.js'
+import { registerUser, loginUser, getMe, updateUser, deleteUser, googleCallback } from '../controllers/authController.js'
 import { protect } from '../middleware/authMiddleware.js'
 import { body } from 'express-validator'
 import rateLimit from 'express-rate-limit'
@@ -36,6 +36,7 @@ router.post(
 
 router.get('/me', protect, getMe)
 router.put('/me', protect, updateUser)
+router.delete('/me', protect, deleteUser)
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }))
 router.get(

@@ -150,3 +150,22 @@ export const googleCallback = (req, res) => {
   const token = generateToken(req.user._id)
   res.redirect(`http://localhost:5173/dashboard?token=${token}`)
 }
+
+// @desc    Delete user data
+// @route   DELETE /api/auth/me
+// @access  Private
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+    if (user) {
+      await user.deleteOne()
+      res.status(200).json({ success: true, data: {} })
+    } else {
+      res.status(404).json({ success: false, error: 'User not found' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ success: false, error: 'Server error' })
+  }
+}
+
