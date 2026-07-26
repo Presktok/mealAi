@@ -4,7 +4,6 @@ Hey there! Welcome to **MoodMeal**, a React web app I built during my internship
 
 ## Screenshots
 
-*(Add your screenshots to the `docs/screenshots/` folder and name them as shown below to make them appear here!)*
 
 | Dashboard | About Page |
 | :---: | :---: |
