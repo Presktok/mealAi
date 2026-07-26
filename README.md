@@ -14,6 +14,11 @@ Hey there! Welcome to **MoodMeal**, a React web app I built that basically asks 
 | :---: | :---: |
 | ![Profile](docs/screenshots/profile.png) | ![Order Tracking](docs/screenshots/order.png) |
 
+| AI Recommendations |
+| :---: |
+| ![AI Recommendations](docs/screenshots/ai%20feature.png) |
+
+
 ## What's inside?
 
 - A landing page that pulls mood-based meal suggestions straight from our Express backend.
