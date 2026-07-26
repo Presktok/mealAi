@@ -23,7 +23,7 @@ function Card({ meal }) {
         )}
         {discount && (
           <div className="absolute left-0 top-4 rounded-r-lg bg-green-discount px-3 py-1 text-sm font-bold text-white shadow-md">
-            {discount} OFF
+            {discount === 'BOGO' ? 'BOGO FREE' : `${discount} OFF`}
           </div>
         )}
       </div>

@@ -21,7 +21,7 @@ export const addOrderItems = async (req, res) => {
 
     const createdOrder = await order.save()
 
-    res.status(201).json({ success: true, data: createdOrder })
+    res.status(200).json({ success: true, data: createdOrder })
   } catch (err) {
     console.error(err)
     res.status(500).json({ success: false, error: 'Server error' })

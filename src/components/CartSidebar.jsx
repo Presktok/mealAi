@@ -31,7 +31,7 @@ function CartSidebar() {
         title: item.title,
         qty: item.quantity,
         price: item.price,
-        image: item.image,
+        image: item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200',
         meal: item._id
       }))
 
@@ -64,7 +64,7 @@ function CartSidebar() {
       }
     } catch (error) {
       console.error("Checkout error:", error)
-      alert("Something went wrong during checkout.")
+      alert("Checkout error: " + error.message)
     } finally {
       setIsCheckingOut(false)
     }
@@ -114,8 +114,24 @@ function CartSidebar() {
                 <div key={item._id} className="flex items-center gap-4 rounded-xl border border-gray-100 p-3 dark:border-gray-800 dark:bg-gray-800/50">
                   <img src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=200'} alt={item.title} className="h-16 w-16 rounded-lg object-cover" />
                   <div className="flex-1">
-                    <h4 className="line-clamp-1 font-semibold text-gray-900 dark:text-white">{item.title}</h4>
-                    <p className="font-bold text-primary">₹{item.price}</p>
+                    <h4 className="line-clamp-1 font-semibold text-gray-900 dark:text-white">
+                      {item.title}
+                      {item.isBogo && item.quantity >= 2 && (
+                        <span className="ml-2 inline-block rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-bold text-green-700 dark:bg-green-900/40 dark:text-green-400">
+                          BOGO APPLIED
+                        </span>
+                      )}
+                    </h4>
+                    <div className="font-bold text-primary">
+                      {item.isBogo && item.quantity >= 2 ? (
+                        <>
+                          <span className="mr-1.5 text-xs text-gray-400 line-through">₹{item.price * item.quantity}</span>
+                          ₹{item.price * Math.ceil(item.quantity / 2)}
+                        </>
+                      ) : (
+                        `₹${item.price * item.quantity}`
+                      )}
+                    </div>
                   </div>
                   <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 px-2 py-1 dark:border-gray-700 dark:bg-gray-900">
                     <button 

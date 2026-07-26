@@ -17,12 +17,13 @@ export function CartProvider({ children }) {
   const addToCart = (meal) => {
     setCartItems((prev) => {
       const existing = prev.find(item => item._id === meal._id)
+      const isBogo = meal.discount === 'BOGO'
       if (existing) {
         return prev.map(item => 
-          item._id === meal._id ? { ...item, quantity: item.quantity + 1 } : item
+          item._id === meal._id ? { ...item, quantity: item.quantity + 1, isBogo } : item
         )
       }
-      return [...prev, { ...meal, quantity: 1 }]
+      return [...prev, { ...meal, quantity: 1, isBogo }]
     })
     setIsCartOpen(true) // auto open cart on add
   }
@@ -41,7 +42,10 @@ export function CartProvider({ children }) {
 
   const clearCart = () => setCartItems([])
 
-  const cartTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const cartTotal = cartItems.reduce((sum, item) => {
+    const paidQuantity = item.isBogo ? Math.ceil(item.quantity / 2) : item.quantity
+    return sum + (item.price * paidQuantity)
+  }, 0)
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
 
   return (

@@ -15,6 +15,9 @@ import { errorHandler, notFoundHandler } from './middleware/errorHandler.js'
 
 const app = express()
 
+// Disable etag generation to prevent 304 Not Modified responses
+app.set('etag', false)
+
 // Parse JSON request bodies
 app.use(express.json())
 
@@ -43,8 +46,8 @@ app.use('/api/auth', authRoutes)
 // Order routes
 app.use('/api/orders', orderRoutes)
 
-// AI routes
-app.post('/api/ai/recommend', recommendMeals)
+// Recommendations route (avoiding 'ai' to prevent adblockers)
+app.post('/api/recommendations/meals', recommendMeals)
 
 // 404 and centralized error handling
 app.use(notFoundHandler)

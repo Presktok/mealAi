@@ -91,7 +91,7 @@ export async function createMeal(req, res) {
   const validated = validateMealBody(req.body)
   const newMeal = await Meal.create(validated)
 
-  res.status(201).json({ success: true, data: newMeal })
+  res.status(200).json({ success: true, data: newMeal })
 }
 
 /** PUT /api/meals/:id */

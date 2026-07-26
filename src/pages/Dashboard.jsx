@@ -6,6 +6,7 @@ import Card from '../components/Card'
 import MoodSelector from '../components/MoodSelector'
 import CategorySelector from '../components/CategorySelector'
 import { fetchMeals, searchMeals } from '../api/meals'
+import apiClient from '../api/client'
 
 function Dashboard() {
   const [searchParams] = useSearchParams()
@@ -47,12 +48,8 @@ function Dashboard() {
           if (selectedMood) setSelectedMood('')
           if (selectedCategory) setSelectedCategory('')
           
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/ai/recommend`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query: aiSearchQuery })
-          })
-          const data = await res.json()
+          const res = await apiClient.post('/recommendations/meals', { query: aiSearchQuery })
+          const data = res.data
           
           if (data.success) {
             if (isMounted) {
@@ -77,10 +74,10 @@ function Dashboard() {
         // Fetch active orders if user is logged in
         const token = localStorage.getItem('token')
         if (token) {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/orders/myorders`, {
+          const res = await apiClient.get('/orders/myorders', {
             headers: { Authorization: `Bearer ${token}` }
           })
-          const orderData = await res.json()
+          const orderData = res.data
           if (orderData.success && orderData.data.length > 0) {
             const latest = orderData.data[0]
             // check if order is less than 20 mins old

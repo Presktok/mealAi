@@ -36,7 +36,7 @@ export const registerUser = async (req, res) => {
     })
 
     if (user) {
-      res.status(201).json({
+      res.status(200).json({
         success: true,
         data: {
           _id: user._id,
