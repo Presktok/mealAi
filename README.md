@@ -2,6 +2,18 @@
 
 Hey there! Welcome to **MoodMeal**, a React web app I built that basically asks "how are you feeling?" and suggests food based on your vibe. You can pick your mood, browse some tasty meal ideas, and even see deals on dishes that match what you're craving. 
 
+## Screenshots
+
+*(Add your screenshots to the `docs/screenshots/` folder and name them as shown below to make them appear here!)*
+
+| Dashboard | About Page |
+| :---: | :---: |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![About Page](docs/screenshots/about.png) |
+
+| Profile | Order Tracking |
+| :---: | :---: |
+| ![Profile](docs/screenshots/profile.png) | ![Order Tracking](docs/screenshots/order.png) |
+
 ## What's inside?
 
 - A landing page that pulls mood-based meal suggestions straight from our Express backend.
