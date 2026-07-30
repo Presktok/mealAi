@@ -15,13 +15,27 @@ export const recommendMeals = async (req, res) => {
     
     const runFallback = async (reason) => {
       console.log(`Using fallback mock AI response. Reason: ${reason}`)
-      const shuffled = allMeals.sort(() => 0.5 - Math.random())
+      
+      const queryWords = query.toLowerCase().split(/\s+/)
+      let filtered = allMeals.filter(m => 
+        queryWords.some(word => 
+          m.title.toLowerCase().includes(word) || 
+          m.category.toLowerCase().includes(word) ||
+          m.mood.toLowerCase().includes(word)
+        )
+      )
+      
+      if (filtered.length === 0) {
+        filtered = allMeals // fallback to all if no matches
+      }
+      
+      const shuffled = filtered.sort(() => 0.5 - Math.random())
       const selected = shuffled.slice(0, 3)
       const recommendedMeals = await Meal.find({ _id: { $in: selected.map(m => m._id) } })
       
       return res.status(200).json({
         success: true,
-        message: `I hear you! I'm currently running in 'Simulation Mode' since ${reason}, but based on what you said, I think these comforting meals would really hit the spot right now!`,
+        message: `I hear you! I'm currently running in 'Simulation Mode' since ${reason}, but based on what you said, I think these meals would really hit the spot right now!`,
         data: recommendedMeals
       })
     }
@@ -73,7 +87,13 @@ export const recommendMeals = async (req, res) => {
         }
       } catch (geminiError) {
         console.error("Gemini API request failed:", geminiError.message)
-        return runFallback("I couldn't connect to the Gemini API (network issue)")
+        let reason = "network issue"
+        if (geminiError.message.includes('429')) reason = "API quota exceeded / rate limit"
+        else if (geminiError.message.includes('503')) reason = "the Gemini servers are currently overloaded"
+        else if (geminiError.message.includes('404')) reason = "the selected AI model is not available"
+        else if (geminiError.message) reason = geminiError.message.split('[')[0].trim() || "API error"
+        
+        return runFallback(reason)
       }
     } else {
       return runFallback("my Gemini API Key hasn't been added yet")

@@ -114,6 +114,11 @@ function Dashboard() {
           <CategorySelector selectedCategory={selectedCategory} onSelectCategory={(cat) => {
             setSelectedCategory(cat)
             setSelectedMood('') // mutually exclusive for now for clarity
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+              document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }, 100)
           }} />
         </div>
       )}
@@ -123,18 +128,23 @@ function Dashboard() {
           <MoodSelector selectedMood={selectedMood} onSelectMood={(mood) => {
             setSelectedMood(mood)
             setSelectedCategory('')
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+              document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }, 100)
           }} />
         </div>
       )}
 
-      <section className="mx-auto max-w-6xl px-4 md:px-8 pb-8">
+      <section id="results-section" className="mx-auto max-w-6xl px-4 md:px-8 pb-8">
         
         {/* Regular Search Header */}
         {searchQuery && (
           <div className="mb-6 pt-8">
             <h2 className="text-2xl font-bold dark:text-white">Search results for "{searchQuery}"</h2>
             <button 
-              onClick={() => window.history.replaceState({}, '', '/dashboard')}
+              onClick={() => navigate('/dashboard')}
               className="mt-2 text-primary hover:underline"
             >
               Clear search
@@ -162,7 +172,7 @@ function Dashboard() {
             )}
             
             <button 
-              onClick={() => window.history.replaceState({}, '', '/dashboard')}
+              onClick={() => navigate('/dashboard')}
               className="mt-4 text-purple-600 dark:text-purple-400 font-bold hover:underline"
             >
               ← Back to normal menu
@@ -213,7 +223,7 @@ function Dashboard() {
 
         {!loading && !error && meals.length > 0 && (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {meals.slice(0, 4).map((meal) => (
+            {meals.map((meal) => (
               <Card key={meal._id} meal={meal} />
             ))}
           </div>

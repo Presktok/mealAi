@@ -32,7 +32,7 @@ function Card({ meal }) {
         <div className="mb-1 flex items-start justify-between gap-2">
           <h3 className="line-clamp-1 text-lg font-bold text-text-primary dark:text-white">{title}</h3>
           <div className="flex items-center gap-1 rounded bg-green-700 px-2 py-0.5 text-xs font-bold text-white">
-            {rating} <span className="text-[10px]">★</span>
+            {Number(rating).toFixed(1)} <span className="text-[10px]">★</span>
           </div>
         </div>
         

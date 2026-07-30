@@ -12,8 +12,13 @@ passport.use(new GoogleStrategy({
     try {
       // Check if user exists by googleId
       let user = await User.findOne({ googleId: profile.id })
+      const avatarUrl = profile.photos && profile.photos.length > 0 ? profile.photos[0].value : ''
 
       if (user) {
+        if (avatarUrl && user.avatar !== avatarUrl) {
+          user.avatar = avatarUrl
+          await user.save()
+        }
         return done(null, user)
       }
 
@@ -22,6 +27,9 @@ passport.use(new GoogleStrategy({
         user = await User.findOne({ email: profile.emails[0].value })
         if (user) {
           user.googleId = profile.id
+          if (avatarUrl && !user.avatar) {
+            user.avatar = avatarUrl
+          }
           await user.save()
           return done(null, user)
         }
@@ -32,6 +40,7 @@ passport.use(new GoogleStrategy({
         name: profile.displayName,
         email: profile.emails ? profile.emails[0].value : '',
         googleId: profile.id,
+        avatar: avatarUrl
       })
 
       return done(null, user)

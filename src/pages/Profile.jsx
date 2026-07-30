@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import PageLayout from '../components/PageLayout'
 
 function Profile() {
@@ -91,12 +91,6 @@ function Profile() {
     return 'Delivered'
   }
 
-  const tabs = [
-    { id: 'orders', label: '📦 My Orders' },
-    { id: 'details', label: '👤 Account Details' },
-    { id: 'settings', label: '⚙️ Settings' }
-  ]
-
   const handleDeleteAccount = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -121,109 +115,117 @@ function Profile() {
 
   return (
     <PageLayout hideSearch={true}>
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 md:flex-row md:px-8 md:py-12">
-        
-        {/* Sidebar */}
-        <aside className="w-full md:w-1/4">
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800">
-            <div className="mb-6 flex flex-col items-center border-b border-gray-100 pb-6 dark:border-gray-700">
-              <div className="mb-3 flex h-24 w-24 items-center justify-center rounded-full bg-primary/10 text-4xl text-primary">
-                👨‍𩱰
-              </div>
-              <h3 className="text-xl font-bold dark:text-white">{user.name}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+      <div className="profile-redesign">
+        <div className="page">
+          
+          {/* Profile sidebar */}
+          <div className="profile-card">
+            <div className="avatar-wrap">
+              {user.avatar ? (
+                <img src={user.avatar} alt={user.name} referrerPolicy="no-referrer" />
+              ) : (
+                <div style={{width:'100%', height:'100%', borderRadius:'50%', background:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'40px'}}>
+                  👨‍𩱰
+                </div>
+              )}
             </div>
-            
-            <nav className="flex flex-col gap-2">
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex w-full items-center justify-start rounded-xl px-4 py-3 text-left font-medium transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-primary text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            <div className="profile-name">{user.name}</div>
+            <div className="profile-email">{user.email}</div>
+            <div className="divider"></div>
+            <div className="side-nav">
               <button 
+                className={`side-item ${activeTab === 'orders' ? 'active' : ''}`}
+                onClick={() => setActiveTab('orders')}
+              >
+                <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                My Orders
+              </button>
+              <button 
+                className={`side-item ${activeTab === 'details' ? 'active' : ''}`}
+                onClick={() => setActiveTab('details')}
+              >
+                <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                Account Details
+              </button>
+              <button 
+                className={`side-item ${activeTab === 'settings' ? 'active' : ''}`}
+                onClick={() => setActiveTab('settings')}
+              >
+                <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+                Settings
+              </button>
+              <div className="side-gap"></div>
+              <button 
+                className="side-item logout"
                 onClick={() => {
                   localStorage.removeItem('isLoggedIn');
                   localStorage.removeItem('token');
                   window.dispatchEvent(new Event('auth-change'));
                   navigate('/');
                 }}
-                className="mt-4 flex w-full items-center justify-start rounded-xl px-4 py-3 text-left font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               >
-                🚪 Log Out
+                <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                Log Out
               </button>
-            </nav>
+            </div>
           </div>
-        </aside>
 
-        {/* Main Content Area */}
-        <main className="w-full flex-1">
-          <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-800 sm:p-8">
-            
-            {/* ORDERS TAB */}
+          {/* Main Content Area */}
+          <div className="orders-panel">
             {activeTab === 'orders' && (
-              <div>
-                <h2 className="mb-6 text-2xl font-bold dark:text-white">Past Orders</h2>
-                <div className="flex flex-col gap-4">
+              <>
+                <div className="panel-head">
+                  <h1 className="panel-title">Past Orders</h1>
+                </div>
+                <p className="panel-sub">{orders.length} orders · {orders.filter(o => getDynamicStatus(o.createdAt) === 'Delivered').length} delivered</p>
+                
+                <div className="order-list">
                   {orders.length === 0 ? (
-                    <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center dark:border-gray-700">
-                      <p className="text-gray-500 dark:text-gray-400">No past orders found.</p>
-                    </div>
+                    <div style={{padding:'40px', textAlign:'center', color:'var(--muted)'}}>No past orders found.</div>
                   ) : (
                     orders.map(order => {
-                      const currentStatus = getDynamicStatus(order.createdAt)
+                      const status = getDynamicStatus(order.createdAt);
+                      const statusClass = status === 'Delivered' ? '' : (status === 'Cancelled' ? 'cancelled' : 'preparing');
                       return (
-                      <div key={order._id} className="flex flex-col justify-between gap-4 rounded-xl border border-gray-100 p-5 transition-shadow hover:shadow-md dark:border-gray-700 sm:flex-row sm:items-center">
-                        <div>
-                          <div className="mb-1 flex items-center gap-3">
-                            <h4 className="font-bold hover:text-primary transition-colors cursor-pointer dark:text-white" onClick={() => navigate(`/order/${order._id}`)}>
-                              Order {order._id.substring(order._id.length - 6).toUpperCase()}
-                            </h4>
-                            <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-                              currentStatus === 'Delivered' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
-                              : currentStatus === 'Cancelled' ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                            }`}>
-                              {currentStatus}
-                            </span>
+                        <div key={order._id} className="order-card">
+                          <div className="order-main">
+                            <div className="order-id-row">
+                              <span className="order-id">#{order._id.substring(order._id.length - 6).toUpperCase()}</span>
+                              <span className={`status-pill ${statusClass}`}><span className="dot"></span>{status}</span>
+                            </div>
+                            <p className="order-items">{order.orderItems.map(item => `${item.title} (x${item.qty})`).join(', ')}</p>
+                            <span className="order-date">{formatDate(order.createdAt)}</span>
                           </div>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {order.orderItems.map(item => `${item.title} (x${item.qty})`).join(', ')}
-                          </p>
-                          <p className="mt-2 text-xs text-gray-400">{formatDate(order.createdAt)}</p>
+                          <div className="order-side">
+                            <div className="order-price"><span className="rupee">₹</span>{order.totalPrice}</div>
+                            <button className="track-btn" onClick={() => navigate(`/order/${order._id}`)}>Track Order</button>
+                          </div>
+                          <div className="mini-track">
+                            <span className="lbl">Placed</span>
+                            <div className="seg done"></div>
+                            <div className={`seg ${['Preparing', 'Out for delivery', 'Delivered'].includes(status) ? 'done' : ''}`}></div>
+                            <div className={`seg ${['Out for delivery', 'Delivered'].includes(status) ? 'done' : ''}`}></div>
+                            <div className={`seg ${status === 'Delivered' ? 'done' : ''}`}></div>
+                            <span className="lbl">Delivered</span>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between sm:flex-col sm:items-end">
-                          <span className="text-lg font-bold text-primary">₹{order.totalPrice}</span>
-                          <button 
-                            onClick={() => navigate(`/order/${order._id}`)}
-                            className="mt-2 rounded-lg border border-primary px-4 py-1.5 text-sm font-medium text-primary transition-colors hover:bg-primary hover:text-white"
-                          >
-                            Track Order
-                          </button>
-                        </div>
-                      </div>
-                    )})
+                      )
+                    })
                   )}
                 </div>
-              </div>
+              </>
             )}
 
-            {/* DETAILS TAB */}
             {activeTab === 'details' && (
-              <div>
-                <h2 className="mb-6 text-2xl font-bold dark:text-white">Account Details</h2>
+              <>
+                <div className="panel-head">
+                  <h1 className="panel-title">Account Details</h1>
+                </div>
+                <p className="panel-sub">Manage your personal information.</p>
+                
                 <form 
-                  className="flex flex-col gap-5 max-w-md"
                   onSubmit={async (e) => {
                     e.preventDefault();
-                    
                     const formData = new FormData(e.target);
                     const name = formData.get('name');
                     const email = formData.get('email');
@@ -257,93 +259,84 @@ function Profile() {
                     }
                   }}
                 >
-                  <div>
-                    <label className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Full Name</label>
-                    <input name="name" type="text" defaultValue={user.name} className="w-full rounded-lg border border-gray-200 p-3 outline-none focus:border-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white" required />
-                  </div>
-                  <div>
-                    <label className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Email Address</label>
-                    <input name="email" type="email" defaultValue={user.email} className="w-full rounded-lg border border-gray-200 p-3 outline-none focus:border-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white" required />
-                  </div>
-                  <div>
-                    <label className="mb-1 text-sm font-medium text-gray-600 dark:text-gray-400">Phone Number</label>
-                    <input name="phone" type="tel" defaultValue={user.phone} className="w-full rounded-lg border border-gray-200 p-3 outline-none focus:border-primary dark:border-gray-700 dark:bg-gray-900 dark:text-white" />
-                  </div>
-                  <button type="submit" className="mt-4 w-full rounded-lg bg-primary py-3 font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-50">
-                    Save Changes
-                  </button>
+                  <label>Full Name</label>
+                  <input name="name" type="text" defaultValue={user.name} required />
+                  
+                  <label>Email Address</label>
+                  <input name="email" type="email" defaultValue={user.email} required />
+                  
+                  <label>Phone Number</label>
+                  <input name="phone" type="tel" defaultValue={user.phone} />
+                  
+                  <button type="submit" className="save-btn">Save Changes</button>
                 </form>
-              </div>
+              </>
             )}
 
-            {/* ADDRESSES TAB REMOVED FOR NOW */}
-
-            {/* SETTINGS TAB */}
             {activeTab === 'settings' && (
-              <div>
-                <h2 className="mb-6 text-2xl font-bold dark:text-white">App Settings</h2>
-                <div className="flex flex-col gap-6">
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-700">
-                    <div>
-                      <h4 className="font-bold dark:text-white">Push Notifications</h4>
-                      <p className="text-sm text-gray-500">Receive order status updates and offers.</p>
-                    </div>
-                    <input type="checkbox" className="h-5 w-5 accent-primary" defaultChecked />
-                  </div>
-                  <div className="flex items-center justify-between border-b border-gray-100 pb-4 dark:border-gray-700">
-                    <div>
-                      <h4 className="font-bold dark:text-white">Dark Mode Preference</h4>
-                      <p className="text-sm text-gray-500">Toggle theme automatically with system.</p>
-                    </div>
-                    <input type="checkbox" className="h-5 w-5 accent-primary" />
-                  </div>
-                  <div>
-                    <h4 className="mb-2 font-bold text-red-500">Danger Zone</h4>
-                    <button 
-                      onClick={() => setShowDeleteConfirm(true)}
-                      className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-900/20 dark:hover:bg-red-900/40"
-                    >
-                      Delete Account
-                    </button>
-                  </div>
+              <>
+                <div className="panel-head">
+                  <h1 className="panel-title">Settings</h1>
                 </div>
-              </div>
+                <p className="panel-sub">Manage your preferences and account status.</p>
+
+                <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', paddingBottom:'16px', borderBottom:'1px solid var(--border)', marginBottom:'24px'}}>
+                  <div>
+                    <h4 style={{margin:0, fontWeight:600}}>Push Notifications</h4>
+                    <p style={{margin:0, fontSize:'13px', color:'var(--muted)'}}>Receive order status updates and offers.</p>
+                  </div>
+                  <input type="checkbox" style={{width:'20px', height:'20px', accentColor:'var(--accent)'}} defaultChecked />
+                </div>
+
+                <div>
+                  <h4 style={{margin:0, fontWeight:600, color:'var(--accent-deep)', marginBottom:'8px'}}>Danger Zone</h4>
+                  <button 
+                    onClick={() => setShowDeleteConfirm(true)}
+                    style={{
+                      background: 'var(--accent-soft)', color: 'var(--accent-deep)',
+                      border: '1px solid #F0C4C8', padding: '10px 16px', borderRadius: '8px',
+                      fontWeight: 600, fontSize: '13px'
+                    }}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </>
             )}
-
-          </div>
-        </main>
-      </div>
-
-      {/* Delete Confirmation Dialog */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
-            <div className="flex justify-center mb-4">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600 dark:bg-red-900/30">
-                ⚠️
-              </span>
-            </div>
-            <h3 className="mb-2 text-center text-xl font-bold dark:text-white">Delete Account?</h3>
-            <p className="mb-6 text-center text-sm text-gray-500 dark:text-gray-400">
-              This action cannot be undone. All your orders and preferences will be permanently lost.
-            </p>
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 rounded-xl bg-gray-100 py-3 font-bold text-gray-700 hover:bg-gray-200 transition-colors dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={handleDeleteAccount}
-                className="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white hover:bg-red-600 transition-colors shadow-sm shadow-red-500/30"
-              >
-                Delete
-              </button>
-            </div>
           </div>
         </div>
-      )}
+
+        {/* Delete Confirmation Dialog */}
+        {showDeleteConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 text-left" style={{fontFamily:'"Plus Jakarta Sans", sans-serif'}}>
+            <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+              <div className="flex justify-center mb-4">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-2xl text-red-600">
+                  ⚠️
+                </span>
+              </div>
+              <h3 className="mb-2 text-center text-xl font-bold text-gray-900">Delete Account?</h3>
+              <p className="mb-6 text-center text-sm text-gray-500">
+                This action cannot be undone. All your orders and preferences will be permanently lost.
+              </p>
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setShowDeleteConfirm(false)}
+                  className="flex-1 rounded-xl bg-gray-100 py-3 font-bold text-gray-700 hover:bg-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleDeleteAccount}
+                  className="flex-1 rounded-xl bg-red-500 py-3 font-bold text-white hover:bg-red-600 transition-colors shadow-sm shadow-red-500/30"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </PageLayout>
   )
 }

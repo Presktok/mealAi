@@ -31,7 +31,7 @@ function Navbar({ hideSearch = false }) {
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`)
+      navigate(`/dashboard?search=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
 

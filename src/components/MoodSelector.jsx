@@ -18,8 +18,10 @@ const MOODS = [
 ];
 
 function MoodSelector({ selectedMood, onSelectMood }) {
-  // Duplicate for seamless infinite scrolling
-  const marqueeMoods = [...MOODS, ...MOODS];
+  // Double the moods so one set is wider than most ultra-wide screens (preventing blank space glitch)
+  const baseMoods = [...MOODS, ...MOODS];
+  // Duplicate again to create a seamless infinite scrolling marquee that translates exactly -50%
+  const marqueeMoods = [...baseMoods, ...baseMoods];
 
   return (
     <div className="mb-12 overflow-hidden bg-gray-50 dark:bg-gray-900">

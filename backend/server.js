@@ -63,3 +63,5 @@ async function start() {
 }
 
 start()
+
+// Nodemon restart trigger

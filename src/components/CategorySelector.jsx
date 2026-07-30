@@ -13,8 +13,10 @@ function CategorySelector({ selectedCategory, onSelectCategory }) {
     { id: 'thali', label: 'Thali', image: 'https://b.zmtcdn.com/data/o2_assets/52eb9796bb9bcf0eba64c643349e97211634401116.png' },
   ];
 
-  // We duplicate the array to create a seamless infinite scrolling marquee
-  const marqueeItems = [...categories, ...categories];
+  // Double the categories so one set is wider than most ultra-wide screens (preventing blank space glitch)
+  const baseCategories = [...categories, ...categories];
+  // Duplicate again to create a seamless infinite scrolling marquee that translates exactly -50%
+  const marqueeItems = [...baseCategories, ...baseCategories];
 
   return (
     <div className="mb-12 overflow-hidden">

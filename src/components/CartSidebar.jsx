@@ -102,7 +102,10 @@ function CartSidebar() {
                 <div className="text-6xl opacity-50">🍽️</div>
                 <p className="text-lg font-medium text-gray-500 dark:text-gray-400">Your cart is empty</p>
                 <button 
-                  onClick={() => setIsCartOpen(false)}
+                  onClick={() => {
+                    setIsCartOpen(false)
+                    navigate('/dashboard')
+                  }}
                   className="text-primary hover:underline"
                 >
                   Browse some food

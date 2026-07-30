@@ -81,7 +81,10 @@ function About() {
         </div>
 
         {/* Scroll-down indicator */}
-        <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 animate-bounce flex-col items-center text-white">
+        <button 
+          onClick={() => document.getElementById('about-content')?.scrollIntoView({ behavior: 'smooth' })}
+          className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 animate-bounce flex-col items-center text-white cursor-pointer hover:text-gray-300 transition-colors"
+        >
           <span className="text-sm tracking-widest">Scroll down</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +96,68 @@ function About() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
+        </button>
+      </section>
+
+      {/* ═══════════════ SECTION 1.2 — About MoodMeal AI ═══════════════ */}
+      <section id="about-content" className="bg-[#f2efe9] pt-24 pb-12 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+        <div className="mx-auto max-w-6xl px-6 md:px-12">
+          <div className="max-w-3xl">
+            <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-[#d93c4b]">
+              About MoodMeal AI
+            </h4>
+            <h2 className="mb-8 text-5xl md:text-6xl font-semibold leading-[1.1] text-gray-900 dark:text-white">
+              Food should meet you <span className="italic text-[#d93c4b]">where you are</span>, not the other way around.
+            </h2>
+            <p className="mb-10 text-xl leading-relaxed text-gray-700 dark:text-gray-300">
+              Most days you don't know what you want to eat. We built a model that reads the mood, not just the menu, and narrows a hundred delivery apps down to three good ideas.
+            </p>
+            <div className="flex flex-wrap gap-4 text-sm font-mono">
+              <span className="rounded-full border border-gray-300 bg-transparent px-4 py-1.5 text-gray-600 dark:text-gray-300 dark:border-gray-600">
+                Est. 2023
+              </span>
+              <span className="rounded-full border border-gray-300 bg-transparent px-4 py-1.5 text-gray-600 dark:text-gray-300 dark:border-gray-600">
+                Remote-first
+              </span>
+              <span className="rounded-full border border-gray-300 bg-transparent px-4 py-1.5 text-gray-600 dark:text-gray-300 dark:border-gray-600">
+                Open source
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════ SECTION 1.5 — How it started ═══════════════ */}
+      <section className="bg-[#f2efe9] pt-12 pb-24 text-gray-800 dark:bg-gray-800 dark:text-gray-200">
+        <div className="mx-auto max-w-6xl px-6 md:px-12 grid grid-cols-1 gap-16 md:grid-cols-2">
+          
+          {/* Left Column */}
+          <div>
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-[#d93c4b]">
+              How it started
+            </h4>
+            <h2 className="text-4xl md:text-5xl font-semibold leading-tight">
+              Twenty minutes of scrolling, still no dinner.
+            </h2>
+          </div>
+
+          {/* Right Column */}
+          <div className="space-y-6 text-lg text-gray-700 dark:text-gray-300">
+            <div className="text-4xl text-[#d93c4b] mb-[-10px]">&ldquo;</div>
+            <p>
+              It started with a Tuesday night and a phone at 40% battery. Our founder had three delivery apps open, four hundred restaurants in range, and no idea what she wanted — just that she was stressed, it was raining, and she wanted something warm. Twenty minutes later, the food was fine. The search wasn't.
+            </p>
+            <p>
+              The prototype that became MoodMeal AI didn't start as a recommendation engine. It started as a five-question quiz she built in a weekend to stop that exact scroll — mood, weather, time of day, one dish you loved recently. Three suggestions came back instead of three hundred. She used it that week. Then her roommate did. Then a hundred strangers on a forum post did.
+            </p>
+            
+            <div className="border-l-4 border-[#d93c4b] pl-6 py-2 mt-8">
+              <p className="text-2xl italic leading-relaxed">
+                We weren't trying to know more about food. We were trying to ask fewer questions of the person who was hungry.
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -155,13 +220,12 @@ function About() {
             Why MoodMeal AI?
           </h2>
 
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="group rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                className="group rounded-3xl border border-gray-100 bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:border-gray-800 dark:bg-gray-800"
               >
-                <span className="mb-4 block text-4xl">{f.icon}</span>
                 <h3 className="mb-2 text-xl font-semibold">{f.title}</h3>
                 <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                   {f.desc}
@@ -210,32 +274,32 @@ function About() {
 /* ─── data ─── */
 const FEATURES = [
   {
-    icon: '🧠',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Brain.png',
     title: 'AI-Powered Matching',
     desc: 'Our model analyses your mood and suggests meals that fit your vibe — no more decision fatigue.',
   },
   {
-    icon: '⚡',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/High%20Voltage.png',
     title: 'Instant Results',
     desc: 'Get personalized recommendations in seconds, not minutes.',
   },
   {
-    icon: '🔒',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked.png',
     title: 'Privacy First',
     desc: 'Your data stays on your device. We never share or sell your information.',
   },
   {
-    icon: '🎨',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Artist%20Palette.png',
     title: 'Dark / Light Mode',
     desc: 'Seamlessly switch themes to match your environment and preference.',
   },
   {
-    icon: '📱',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone.png',
     title: 'Responsive Design',
     desc: 'Works beautifully on desktop, tablet, and mobile — anywhere you eat.',
   },
   {
-    icon: '🚀',
+    icon: 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Rocket.png',
     title: 'Open Source',
     desc: 'Contribute on GitHub and help us make meal discovery smarter for everyone.',
   },
