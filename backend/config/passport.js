@@ -6,7 +6,8 @@ import config from './index.js'
 passport.use(new GoogleStrategy({
     clientID: config.googleClientId || 'DUMMY_ID_UNTIL_CONFIGURED',
     clientSecret: config.googleClientSecret || 'DUMMY_SECRET_UNTIL_CONFIGURED',
-    callbackURL: '/api/auth/google/callback'
+    callbackURL: '/api/auth/google/callback',
+    proxy: true
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
