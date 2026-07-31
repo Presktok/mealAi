@@ -144,11 +144,12 @@ export const updateUser = async (req, res) => {
 // @desc    Google OAuth Callback Handler
 // @route   GET /api/auth/google/callback
 export const googleCallback = (req, res) => {
+  const frontendUrl = config.corsOrigin || 'http://localhost:5173'
   if (!req.user) {
-    return res.redirect('http://localhost:5173/login?error=oauth_failed')
+    return res.redirect(`${frontendUrl}/login?error=oauth_failed`)
   }
   const token = generateToken(req.user._id)
-  res.redirect(`http://localhost:5173/dashboard?token=${token}`)
+  res.redirect(`${frontendUrl}/dashboard?token=${token}`)
 }
 
 // @desc    Delete user data
