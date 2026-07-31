@@ -2,6 +2,8 @@
 
 Hey there! Welcome to **MoodMeal**, a React web app I built during my internship! It basically asks "how are you feeling?" and suggests food based on your vibe. You can pick your mood, browse some tasty meal ideas, and even see deals on dishes that match what you're craving. 
 
+**🚀 Live Demo:** [https://meal-ai-kappa.vercel.app/](https://meal-ai-kappa.vercel.app/)
+
 ## Screenshots
 
 
